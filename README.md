@@ -1,5 +1,5 @@
 # Product-Billing-System
-PBL project for college
+PBL project
 
 ## Clone
 
