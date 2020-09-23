@@ -11,6 +11,13 @@
 #include <vector>
 using namespace std;
 
+enum class UserState
+{
+	CUSTOMER,
+	SHOP,
+	LOGGED_OUT
+};
+
 class Item
 {
 public:
@@ -301,7 +308,7 @@ public:
 		return 1;
 	}
 
-	Customer* searchCustomer(string username, string password, bool &LOGGED_IN)
+	Customer *searchCustomer(string &username, string &password, UserState &state)
 	{
 		ifstream file;
 		Customer *customer = new Customer();
@@ -311,8 +318,8 @@ public:
 		while (file >> *customer)
 		{
 			if (customer->areValidCredentials(username, password))
-			{	
-				LOGGED_IN = 1;
+			{
+				state = UserState::CUSTOMER;
 				break;
 			}
 		}
@@ -397,15 +404,14 @@ int main()
 	// Initializing [Customer] pointer to null
 	Customer *customer = NULL;
 
-	// Initializing [ShopAccount] pointer to null
-	ShopAccount *shop = NULL;
+	// Initializing [ShopAccount] pointer
+	ShopAccount *shop = new ShopAccount();
 
 	// Creating an object of class [Customers]
 	Customers c_obj;
 
-	// @boolean denoting the registration state of the user
-	// either logged in or logged out
-	bool LOGGED_IN = 0;
+	// Object of enum class [UserState]
+	UserState state = UserState::LOGGED_OUT;
 
 	// Initializing choice to -1
 	int choice = -1;
@@ -413,59 +419,102 @@ int main()
 	// Variables for storing the credentials entered by the user
 	string username, password, shopID;
 
+	// For reading files
+	ifstream file;
+
 	// Authentication Interface
 	while (choice)
 	{
-		if (LOGGED_IN)
+		if (state == UserState::LOGGED_OUT)
 		{
-			// Show home screen
-			cout << "\n\t1. Available items\n\t2. Cart\n\t3. Profile\n\t4. Logout\n\t0. Exit\n\n\tEnter your choice : ";
+			// Show Login Screen
+			cout << "\n\t1. Sign Up [Customer]"
+				 << "\n\t2. Login [Customer]"
+				 << "\n\t3. Login [Shop]"
+				 << "\n\t0. Exit"
+				 << "\n\n\tEnter your choice : ";
 			cin >> choice;
-			/** TODO: Add the required functions for the items **/
-		}
-		else
-		{
-			// Show login screen
-			cout << "\n\t1. Sign Up (Customer)\n\t2. Login (Customer)\n\t3. Login as Shop\n\t0. Exit\n\n\tEnter your choice : ";
-			cin >> choice;
+
 			switch (choice)
 			{
 			case 1: // Sign-Up [Customer]
-				c_obj.signUpCustomer() ? cout << "\n\tSign-Up successful!\n\tPlease Login to continue" : cout << "\n\tSign-Up failed :(";
+				c_obj.signUpCustomer() ? cout << "\n\tSign-Up successful!\n\tPlease Login to continue\n" : cout << "\n\tSign-Up failed :(\n";
 				break;
 
 			case 2: // Login [Customer]
 
 				// Take input from the user
-				cout<<"\n\tEnter your username : ";
-				cin>>username;
-				cout<<"\n\tEnter your pasword : ";
-				cin>>password;
+				cout << "\n\tEnter your username : ";
+				cin >> username;
+				cout << "\n\tEnter your pasword : ";
+				cin >> password;
 
-				/** Search if the customer exists
-				 * 	If found, save the customer in the customer pointer
-				 */
-				customer = c_obj.searchCustomer(username, password, LOGGED_IN);
+				//Search if the customer exists
+				//If found, save the customer in the customer pointer
+				customer = c_obj.searchCustomer(username, password, state);
 
-				if(!LOGGED_IN){
-					cout<<"\n\tIncorrect username or password! Please try again\n";
+				if (state != UserState::CUSTOMER)
+				{
+					cout << "\n\tIncorrect username or password! Please try again\n";
 					customer = NULL;
 				}
 
 				break;
 
 			case 3: // Login [Shop]
-				cout<<"\n\tEnter the Shop ID : ";
-				cin>>shopID;
-				cout<<"\n\tEnter the password : ";
-				cin>>password;
-				/** TODO: complete this case **/
+
+				// Input credentials from user
+				cout << "\n\tEnter the Shop ID : ";
+				cin >> shopID;
+				cout << "\n\tEnter the password : ";
+				cin >> password;
+
+				// Read credentials from file
+				file.open("db/ShopAccount.txt");
+				file >> *shop;
+				file.close();
+
+				if (shop->areValidCredentials(shopID, password))
+				{
+					state = UserState::SHOP;
+				}
+				else
+				{
+					cout << "\n\tIncorrect Shop ID or Password! Please try again\n";
+					shop = NULL;
+				}
+
 				break;
 
 			default:
-				cout<<"\n\tPlease enter a valid choice!";
+				cout << "\n\tPlease enter a valid choice!";
 				break;
 			}
+		}
+		else if (state == UserState::CUSTOMER)
+		{
+			// Show home screen
+			cout << "\n\t1. Available items"
+				 << "\n\t2. Cart"
+				 << "\n\t3. Profile"
+				 << "\n\t4. Logout"
+				 << "\n\t0. Exit"
+				 << "\n\n\tEnter your choice : ";
+			cin >> choice;
+			/** TODO: Add the required functions for the items **/
+		}
+		else if (state == UserState::SHOP)
+		{
+			// Show Home Screen
+			cout << "\n\t1. Add item"
+				 << "\n\t2. Remove item"
+				 << "\n\t3. Modify item"
+				 << "\n\t4. Logout"
+				 << "\n\t0. Exit"
+				 << "\n\n\tEnter your choice : ";
+			cin >> choice;
+
+			/** TODO: Add required functions **/
 		}
 	}
 
