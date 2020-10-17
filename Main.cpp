@@ -1,7 +1,7 @@
 /** 	=== Contributors ===
  * 1. Siddhesh
  * 2. Mayank
- * 3. 
+ * 3. Amrut
  * 4. 
 **/
 
@@ -10,6 +10,13 @@
 #include <string>
 #include <vector>
 using namespace std;
+
+enum class UserState
+{
+	CUSTOMER,
+	SHOP,
+	LOGGED_OUT
+};
 
 class Item
 {
@@ -42,61 +49,147 @@ public:
 		cout << "Enter Quantity of Item";
 		cin >> quantity;
 	}
+
+	void showItem()
+	{
+		cout << name << "\t" << price << "\t" << quantity << endl;
+	}
+
+	friend ostream &operator<<(ostream &out, Item &item)
+	{
+		out << item.name << "\n"
+			<< item.price << "\n"
+			<< item.quantity << endl;
+		return out;
+	}
+
+	friend istream &operator>>(istream &in, Item &item)
+	{
+		in >> item.name;
+		in >> item.price;
+		in >> item.quantity;
+		return in;
+	}
 };
 
 class Customer
 {
 private:
-	string username;
 	string password;
+
+	// Contact details
 	string address;
 	unsigned long long contactNumber;
 
+	// Current Cart
+	vector<Item> currentCart;
+
+	// Order History
+	//vector<vector<Item>> orderHistory;
+
 public:
-	string getUsername()
+	// Unique username
+	string username;
+
+	// Default Constructor
+	Customer()
 	{
-		return username;
+		username = "NULL";
+		password = "NULL";
+		address = "NULL";
+		contactNumber = 0;
+		currentCart = vector<Item>();
+		//orderHistory = vector<vector<Item>>();
 	}
 
 	void takeInput()
 	{
 		cout << "\n\tEnter Username: ";
-		//cin.ignore('\n');
-		//getline(cin,username);
 		cin >> username;
 		cout << "\n\tEnter password: ";
-		//cin.ignore('\n');
-		//getline(cin,password);
 		cin >> password;
 		cout << "\n\tEnter address: ";
-		//cin.ignore('\n');
-		//getline(cin,address);
 		cin >> address;
 		cout << "\n\tEnter your contact number: ";
 		cin >> contactNumber;
-		//cin.ignore();
-	}
-
-	// Current Cart
-	//vector<Item> currentCart;
-
-	// Order History
-	//vector<vector<Item>> orderHistory;
-
-	// Default Constructor
-	Customer()
-	{
-		//currentCart = vector<Item>();
-		//orderHistory = vector<vector<Item>>();
-		username = "NULL";
-		password = "NULL";
-		address = "NULL";
-		contactNumber = 0;
 	}
 
 	void show()
 	{
-		cout << username << " " << password << " " << address << " " << contactNumber << endl;
+		cout << "\n\tUsername : " << username << "\n\tAddress : " << address << "\n\tContact Number : " << contactNumber << "\n";
+		showCart();
+	}
+
+	void showCart()
+	{
+		if (currentCart.empty())
+		{
+			cout << "\n\tThe cart is empty :(";
+			return;
+		}
+		cout << "Name"
+			 << "\tPrice\t"
+			 << "Quantity\t" << endl;
+		for (Item i : currentCart)
+		{
+			i.showItem();
+		}
+	}
+
+	bool areValidCredentials(const string name, const string pass)
+	{
+		return ((name == username) && (pass == password));
+	}
+
+	friend ostream &operator<<(ostream &out, Customer &customer)
+	{
+		out << customer.username << "\n"
+			<< customer.password << "\n"
+			<< customer.address << "\n"
+			<< customer.contactNumber << "\n";
+		for (size_t i = 0; i < customer.currentCart.size(); ++i)
+		{
+			out << customer.currentCart[i];
+		}
+		return out;
+	}
+
+	friend istream &operator>>(istream &in, Customer &customer)
+	{
+		in >> customer.username;
+		in >> customer.password;
+		in >> customer.address;
+		in >> customer.contactNumber;
+		for (Item i : customer.currentCart)
+		{
+			in >> i;
+		}
+		return in;
+	}
+};
+
+class ShopAccount
+{
+private:
+	string shopID;
+	string password;
+
+public:
+	/** To validate the credentials entered by the user
+	 *  @return true if credentials are correct
+	 *  else @return false
+	 */
+	bool areValidCredentials(string &sID, string &p)
+	{
+		return ((sID == shopID) && (p == password));
+	}
+
+	// To read shopID and password from file
+	friend istream &operator>>(istream &in, ShopAccount &shopAccount)
+	{
+		in >> shopAccount.shopID;
+		in >> shopAccount.password;
+		return in;
 	}
 };
 
@@ -109,7 +202,7 @@ public:
 	{
 		Item item;
 		ofstream ItemFile;
-		ItemFile.open("/db/Items.txt", ios::app);
+		ItemFile.open("Items.txt", ios::app);
 		item.addItem();
 		ItemFile.write((char *)&item, sizeof(item));
 		ItemFile.close();
@@ -118,17 +211,23 @@ public:
 	int SearchItem(string nam)
 	{
 		ifstream fin;
+		fin.open("db/Items.txt", ios::in);
+
 		Item item;
-		fin.open("/db/Items.txt");
+
 		fin.read((char *)&item, sizeof(item));
 
 		while (!fin.eof())
 		{
+			cout << item.name;
 			if (nam == item.name)
 			{
+				cout << "\nfound";
 				return 1;
 			}
+			fin.read((char *)&item, sizeof(item));
 		}
+		cout << "\n not found";
 		fin.close();
 		return 0;
 	}
@@ -148,8 +247,8 @@ public:
 			fstream fout;
 			ifstream fin;
 			Item item;
-			fin.open("/db/Items.txt");
-			fout.open("/db/text.txt", ios::trunc | ios::out | ios::in);
+			fin.open("db/Items.txt");
+			fout.open("db/text.txt", ios::trunc | ios::out | ios::in);
 			fin.seekg(0, ios::beg);
 			fin.read((char *)&item, sizeof(item));
 			while (fin)
@@ -168,68 +267,256 @@ public:
 			fin.close();
 			ifstream fpt;
 			fstream fpo;
-			fpo.open("/db/Items.txt", ios::trunc | ios::out | ios::in);
-			fpt.open("/db/text.txt");
+			fpo.open("db/Items.txt", ios::trunc | ios::out | ios::in);
+			fpt.open("db/text.txt");
 			while (!fpt.eof())
 			{
 				fpo.write((char *)&item, sizeof(item));
 			}
 			fpo.close();
 			fpt.close();
-			remove("/db/text.txt");
+			remove("db/text.txt");
 		}
 	}
 };
 
-class Customers : public Items
+// Customer database file operations
+class Customers
 {
-	// File operations here
-
 public:
-	void showFile()
+	/** Checks if a username is valid or not
+	 *  @return true if the username is not taken by anyone
+	 *  @return false if the username is already taken
+	**/
+	bool isValidUsername(string &username)
 	{
-		ifstream fin;
+		ifstream file;
 		Customer customer;
 
-		fin.open("db/Customers.txt", ios::in | ios::binary);
+		file.open("db/Customers.txt", ios::in);
 
-		fin.read((char *)&customer, sizeof(customer));
+		while (file >> customer)
+		{
+			if (customer.username == username)
+			{
+				file.close();
+				return 0;
+			}
+		}
 
-		fin.close();
+		file.close();
+		return 1;
 	}
 
-	void signUp()
-
+	Customer *searchCustomer(string &username, string &password, UserState &state)
 	{
-		ofstream customersFile;
+		ifstream file;
+		Customer *customer = new Customer();
+
+		file.open("db/Customers.txt", ios::in);
+
+		while (file >> *customer)
+		{
+			if (customer->areValidCredentials(username, password))
+			{
+				state = UserState::CUSTOMER;
+				break;
+			}
+		}
+
+		file.close();
+
+		return customer;
+	}
+
+	// To add a new customer to the database
+	bool signUpCustomer()
+	{
+		ofstream file;
+		Customer customer;
+		bool validUsername = 0;
+
+		file.open("db/Customers.txt", ios::app);
+
+		while (!validUsername)
+		{
+			customer.takeInput();
+			validUsername = isValidUsername(customer.username);
+			if (!validUsername)
+			{
+				cout << "\n\tUsername already taken... Please enter another username!";
+			}
+		}
+
+		file << customer;
+
+		file.close();
+
+		return 1;
+	}
+
+	// To delete an account of a customer
+	void deleteCustomer(Customer &c)
+	{
+		ifstream old_file;
+		ofstream new_file;
 		Customer customer;
 
-		// Opening the file in append mode
-		customersFile.open("db/Customers.txt", ios::app);
+		old_file.open("db/Customers.txt");
+		new_file.open("db/Temp.txt");
 
-		customer.takeInput();
+		while (old_file >> customer)
+		{
+			if (customer.username != c.username)
+			{
+				new_file << customer;
+			}
+		}
 
-		customersFile.write((char *)&customer, sizeof(customer));
+		old_file.close();
+		new_file.close();
 
-		customersFile.close();
+		remove("db/Customers.txt");
+		rename("db/Temp.txt", "db/Customers.txt");
+	}
+
+	/** For debugging purpose only
+	 *  TODO: Delete the function below, before submitting
+	 */
+	void showFile()
+	{
+		ifstream file;
+		Customer customer;
+
+		file.open("db/Customers.txt", ios::in);
+
+		while (file >> customer)
+		{
+			customer.show();
+		}
+
+		file.close();
 	}
 };
 
 int main()
 {
-	fstream customersFile;
-	Customer customer;
-	Customers cs;
-	Items it;
-	it.AddItems();
-	it.AddItems();
-	cout
-		<< "Modify items";
-	it.ModifyItem();
+	// Initializing [Customer] pointer to null
+	Customer *customer = NULL;
 
-	// cs.signUp();
+	// Initializing [ShopAccount] pointer
+	ShopAccount *shop = new ShopAccount();
 
-	// cs.showFile();
+	// Creating an object of class [Customers]
+	Customers c_obj;
+
+	// Object of enum class [UserState]
+	UserState state = UserState::LOGGED_OUT;
+
+	// Initializing choice to -1
+	int choice = -1;
+
+	// Variables for storing the credentials entered by the user
+	string username, password, shopID;
+
+	// For reading files
+	ifstream file;
+
+	// Authentication Interface
+	while (choice)
+	{
+		if (state == UserState::LOGGED_OUT)
+		{
+			// Show Login Screen
+			cout << "\n\t1. Sign Up [Customer]"
+				 << "\n\t2. Login [Customer]"
+				 << "\n\t3. Login [Shop]"
+				 << "\n\t0. Exit"
+				 << "\n\n\tEnter your choice : ";
+			cin >> choice;
+
+			switch (choice)
+			{
+			case 1: // Sign-Up [Customer]
+				c_obj.signUpCustomer() ? cout << "\n\tSign-Up successful!\n\tPlease Login to continue\n" : cout << "\n\tSign-Up failed :(\n";
+				break;
+
+			case 2: // Login [Customer]
+
+				// Take input from the user
+				cout << "\n\tEnter your username : ";
+				cin >> username;
+				cout << "\n\tEnter your pasword : ";
+				cin >> password;
+
+				//Search if the customer exists
+				//If found, save the customer in the customer pointer
+				customer = c_obj.searchCustomer(username, password, state);
+
+				if (state != UserState::CUSTOMER)
+				{
+					cout << "\n\tIncorrect username or password! Please try again\n";
+					customer = NULL;
+				}
+
+				break;
+
+			case 3: // Login [Shop]
+
+				// Input credentials from user
+				cout << "\n\tEnter the Shop ID : ";
+				cin >> shopID;
+				cout << "\n\tEnter the password : ";
+				cin >> password;
+
+				// Read credentials from file
+				file.open("db/ShopAccount.txt");
+				file >> *shop;
+				file.close();
+
+				if (shop->areValidCredentials(shopID, password))
+				{
+					state = UserState::SHOP;
+				}
+				else
+				{
+					cout << "\n\tIncorrect Shop ID or Password! Please try again\n";
+					shop = NULL;
+				}
+
+				break;
+
+			default:
+				cout << "\n\tPlease enter a valid choice!";
+				break;
+			}
+		}
+		else if (state == UserState::CUSTOMER)
+		{
+			// Show home screen
+			cout << "\n\t1. Available items"
+				 << "\n\t2. Cart"
+				 << "\n\t3. Profile"
+				 << "\n\t4. Logout"
+				 << "\n\t0. Exit"
+				 << "\n\n\tEnter your choice : ";
+			cin >> choice;
+			/** TODO: Add the required functions for the items **/
+		}
+		else if (state == UserState::SHOP)
+		{
+			// Show Home Screen
+			cout << "\n\t1. Add item"
+				 << "\n\t2. Remove item"
+				 << "\n\t3. Modify item"
+				 << "\n\t4. Logout"
+				 << "\n\t0. Exit"
+				 << "\n\n\tEnter your choice : ";
+			cin >> choice;
+
+			/** TODO: Add required functions **/
+		}
+	}
 
 	return 0;
 }

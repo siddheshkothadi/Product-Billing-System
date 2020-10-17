@@ -1,5 +1,5 @@
 # Product-Billing-System
-PBL project for college
+PBL project
 
 ## Clone
 
@@ -39,3 +39,9 @@ PBL project for college
   ```bash
     git merge upstream/develop
   ```
+
+## Sending a Pull Request
+
+- Commit some changes on your forked repository.
+
+- Then, you'll see an option to send a pull request on the top right corner of your forked repository, click on it and create a pull request.
