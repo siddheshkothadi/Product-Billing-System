@@ -23,7 +23,7 @@ PBL project
 
 - Now to test the upstream, run the following command, you'll see an output similar to the output below
   ```bash
-    $ git remote -v
+    git remote -v
     origin  https://github.com/YOUR_GITHUB_USER_NAME/Product-Billing-System(fetch)
     origin  https://github.com/YOUR_GITHUB_USER_NAME/Product-Billing-System (push)
     upstream        https://github.com/siddheshkothadi/Product-Billing-System.git (fetch)
