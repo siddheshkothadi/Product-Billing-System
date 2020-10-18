@@ -511,12 +511,14 @@ int main()
 				i_obj.deleteItem(i_obj);
 				break;
 			case 3:
-
 				cout << "Enter the name of item to be modify: ";
 				cin >> i_obj.name;
 				i_obj.modifyItem(i_obj);
 				break;
-
+			case 4:
+				state = UserState::LOGGED_OUT;
+				cout << "\n\tSuccessfully Logged Out!\n";
+				break;
 			default:
 				break;
 			}
