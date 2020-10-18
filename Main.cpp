@@ -20,7 +20,7 @@ enum class UserState
 
 class Item
 {
-public:
+private:
 	string name;
 	float price;
 	unsigned int quantity;
@@ -40,14 +40,18 @@ public:
 		quantity = q;
 	}
 
-	void addItem()
+	void takeInput()
 	{
-		cout << "\nEnter Name of Item: ";
+		cout << "\n\tEnter Name of Item: ";
 		cin >> name;
-		cout << "\nEnter Price of Item: ";
+		cout << "\n\tEnter Price of Item: ";
 		cin >> price;
-		cout << "\nEnter Quantity of Item: ";
+		cout << "\n\tEnter Quantity of Item: ";
 		cin >> quantity;
+	}
+
+	string getName(){
+		return name;
 	}
 
 	void showItem()
@@ -175,6 +179,13 @@ private:
 	string password;
 
 public:
+	// Default Constructor to initialize the values
+	ShopAccount()
+	{
+		shopID = "NULL";
+		password = "NULL";
+	}
+
 	/** To validate the credentials entered by the user
 	 *  @return true if credentials are correct
 	 *  else @return false
@@ -193,21 +204,10 @@ public:
 	}
 };
 
-class Items : public Item
+class Items
 {
-	// File operations here
 public:
-	//Add Items
-	void AddItems()
-	{
-		Item item;
-		ofstream ItemFile;
-		ItemFile.open("db/Items.txt", ios::app);
-		item.addItem();
-		ItemFile << item;
-		ItemFile.close();
-	}
-	bool SearchItem(string &nam)
+	bool searchItem(string &n)
 	{
 		ifstream fileItem;
 		fileItem.open("db/Items.txt", ios::in);
@@ -216,31 +216,65 @@ public:
 
 		while (fileItem >> item)
 		{
-			if (item.name == nam)
+			if (item.getName() == n)
 			{
+				// Item Found
 				fileItem.close();
-				return 0;
+				return 1;
 			}
 		}
 
+		// Item Not Found
 		fileItem.close();
-		return 1;
+		return 0;
 	}
-	void modifyItem(Item &i)
+
+	//Add Item
+	void addItem()
 	{
-		bool flag = SearchItem(i.name);
-		if (!flag)
+		Item item;
+		string itemName;
+		ofstream itemFile;
+		bool itemAlreadyExists = 1;
+
+		itemFile.open("db/Items.txt", ios::app);
+
+		while (itemAlreadyExists)
 		{
-			deleteItem(i);
-			AddItems();
+			item.takeInput();
+			itemName = item.getName();
+			if (searchItem(itemName))
+			{
+				// Item already exists
+				cout << "\n\tItem already exists!"
+					 << "\n\tPlease add a unique item!\n";
+			}
+			else
+			{
+				// If the item name is unique, end the loop
+				itemAlreadyExists = 0;
+			}
+		}
+
+		itemFile << item;
+		itemFile.close();
+	}
+
+	void modifyItem(string key)
+	{
+		bool found = searchItem(key);
+		if (found)
+		{
+			deleteItem(key);
+			addItem();
 		}
 		else
 		{
-			cout << "item not found";
+			cout << "\n\tItem not found";
 		}
-	};
+	}
 
-	void deleteItem(Item &i)
+	void deleteItem(string key)
 	{
 		ifstream old_file;
 		ofstream new_file;
@@ -251,7 +285,7 @@ public:
 
 		while (old_file >> item)
 		{
-			if (item.name != i.name)
+			if (item.getName() != key)
 			{
 				new_file << item;
 			}
@@ -385,9 +419,10 @@ public:
 };
 
 int main()
-{
-	// Item *item = NULL;
+{	
+	// Object of class [Items]
 	Items i_obj;
+
 	// Initializing [Customer] pointer to null
 	Customer *customer = NULL;
 
@@ -404,7 +439,7 @@ int main()
 	int choice = -1;
 
 	// Variables for storing the credentials entered by the user
-	string username, password, shopID;
+	string username, password, shopID, key;
 
 	// For reading files
 	ifstream file;
@@ -424,6 +459,7 @@ int main()
 
 			switch (choice)
 			{
+
 			case 1: // Sign-Up [Customer]
 				c_obj.signUpCustomer() ? cout << "\n\tSign-Up successful!\n\tPlease Login to continue\n" : cout << "\n\tSign-Up failed :(\n";
 				break;
@@ -445,6 +481,9 @@ int main()
 					cout << "\n\tIncorrect username or password! Please try again\n";
 					customer = NULL;
 				}
+				else{
+					cout << "\n\tWelcome \'" << username << "\', you're now logged in\n";
+				}
 
 				break;
 
@@ -464,17 +503,17 @@ int main()
 				if (shop->areValidCredentials(shopID, password))
 				{
 					state = UserState::SHOP;
+					cout << "\n\tWelcome " << shopID << ", you're now logged in\n";
 				}
 				else
 				{
 					cout << "\n\tIncorrect Shop ID or Password! Please try again\n";
 					shop = NULL;
 				}
-
 				break;
 
 			default:
-				cout << "\n\tPlease enter a valid choice!";
+				cout << "\n\tPlease enter a valid choice!\n";
 				break;
 			}
 		}
@@ -488,6 +527,18 @@ int main()
 				 << "\n\t0. Exit"
 				 << "\n\n\tEnter your choice : ";
 			cin >> choice;
+
+			switch(choice){
+				case 4:
+					state = UserState::LOGGED_OUT;
+					cout << "\n\tSuccessfully Logged Out!\n";
+					break;
+
+				default:
+					cout << "\n\tPlease enter a valid choice!\n";
+					break;
+			}
+
 			/** TODO: Add the required functions for the items **/
 		}
 		else if (state == UserState::SHOP)
@@ -502,28 +553,33 @@ int main()
 			cin >> choice;
 			switch (choice)
 			{
+
 			case 1:
-				i_obj.AddItems();
+				i_obj.addItem();
 				break;
+
 			case 2:
-				cout << "Enter the item name to be deleted ";
-				cin >> i_obj.name;
-				i_obj.deleteItem(i_obj);
+				cout << "\n\tEnter the item name to be deleted ";
+				cin >> key;
+				i_obj.deleteItem(key);
 				break;
+
 			case 3:
-				cout << "Enter the name of item to be modify: ";
-				cin >> i_obj.name;
-				i_obj.modifyItem(i_obj);
+				cout << "\n\tEnter the name of item to be modify: ";
+				cin >> key;
+				i_obj.modifyItem(key);
 				break;
+
 			case 4:
 				state = UserState::LOGGED_OUT;
 				cout << "\n\tSuccessfully Logged Out!\n";
 				break;
+
 			default:
+				cout << "\n\tPlease enter a valid choice!\n";
 				break;
 			}
 
-			/** TODO: Add required functions **/
 		}
 	}
 
