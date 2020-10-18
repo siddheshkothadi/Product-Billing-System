@@ -79,9 +79,8 @@ public:
 class Customer
 {
 private:
-	// Unique username
+	// Unique username and password
 	string username;
-
 	string password;
 
 	// Contact details
@@ -407,23 +406,23 @@ public:
 		rename("db/Temp.txt", "db/Customers.txt");
 	}
 
-	/** For debugging purpose only
-	 *  TODO: Delete the function below, before submitting
-	 */
-	void showFile()
-	{
-		ifstream file;
-		Customer customer;
+	// /** For debugging purpose only
+	//  *  TODO: Delete the function below, before submitting
+	//  */
+	// void showFile()
+	// {
+	// 	ifstream file;
+	// 	Customer customer;
 
-		file.open("db/Customers.txt", ios::in);
+	// 	file.open("db/Customers.txt", ios::in);
 
-		while (file >> customer)
-		{
-			customer.show();
-		}
+	// 	while (file >> customer)
+	// 	{
+	// 		customer.show();
+	// 	}
 
-		file.close();
-	}
+	// 	file.close();
+	// }
 };
 
 int main()
@@ -516,7 +515,6 @@ int main()
 				else
 				{
 					cout << "\n\tIncorrect Shop ID or Password! Please try again\n";
-					shop = NULL;
 				}
 				break;
 
@@ -528,12 +526,12 @@ int main()
 		else if (state == UserState::CUSTOMER)
 		{
 			// Show home screen
-			cout << "\n\t1. Available items"
-				 << "\n\t2. Cart"
-				 << "\n\t3. Profile"
-				 << "\n\t4. Logout"
-				 << "\n\t0. Exit"
-				 << "\n\n\tEnter your choice : ";
+			cout << "\n\t\t1. Available items"
+				 << "\n\t\t2. Cart"
+				 << "\n\t\t3. Profile"
+				 << "\n\t\t4. Logout"
+				 << "\n\t\t0. Exit"
+				 << "\n\n\t\tEnter your choice : ";
 			cin >> choice;
 
 			switch(choice){
@@ -552,12 +550,12 @@ int main()
 		else if (state == UserState::SHOP)
 		{
 			// Show Home Screen
-			cout << "\n\t1. Add item"
-				 << "\n\t2. Remove item"
-				 << "\n\t3. Modify item"
-				 << "\n\t4. Logout"
-				 << "\n\t0. Exit"
-				 << "\n\n\tEnter your choice : ";
+			cout << "\n\t\t1. Add item"
+				 << "\n\t\t2. Remove item"
+				 << "\n\t\t3. Modify item"
+				 << "\n\t\t4. Logout"
+				 << "\n\t\t0. Exit"
+				 << "\n\n\t\tEnter your choice : ";
 			cin >> choice;
 			switch (choice)
 			{
