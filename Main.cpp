@@ -79,6 +79,9 @@ public:
 class Customer
 {
 private:
+	// Unique username
+	string username;
+
 	string password;
 
 	// Contact details
@@ -92,9 +95,6 @@ private:
 	//vector<vector<Item>> orderHistory;
 
 public:
-	// Unique username
-	string username;
-
 	// Default Constructor
 	Customer()
 	{
@@ -116,6 +116,10 @@ public:
 		cin >> address;
 		cout << "\n\tEnter your contact number: ";
 		cin >> contactNumber;
+	}
+
+	string getUsername(){
+		return username;
 	}
 
 	void show()
@@ -302,6 +306,9 @@ public:
 // Customer database file operations
 class Customers
 {
+private:
+	string key;
+
 public:
 	/** Checks if a username is valid or not
 	 *  @return true if the username is not taken by anyone
@@ -316,7 +323,7 @@ public:
 
 		while (file >> customer)
 		{
-			if (customer.username == username)
+			if (customer.getUsername() == username)
 			{
 				file.close();
 				return 0;
@@ -360,7 +367,8 @@ public:
 		while (!validUsername)
 		{
 			customer.takeInput();
-			validUsername = isValidUsername(customer.username);
+			key = customer.getUsername();
+			validUsername = isValidUsername(key);
 			if (!validUsername)
 			{
 				cout << "\n\tUsername already taken... Please enter another username!";
@@ -386,7 +394,7 @@ public:
 
 		while (old_file >> customer)
 		{
-			if (customer.username != c.username)
+			if (customer.getUsername() != c.getUsername())
 			{
 				new_file << customer;
 			}
