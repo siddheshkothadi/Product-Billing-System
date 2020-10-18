@@ -42,11 +42,11 @@ public:
 
 	void addItem()
 	{
-		cout << "Enter Name of Item";
+		cout << "\nEnter Name of Item: ";
 		cin >> name;
-		cout << "Enter Price of Item";
+		cout << "\nEnter Price of Item: ";
 		cin >> price;
-		cout << "Enter Quantity of Item";
+		cout << "\nEnter Quantity of Item: ";
 		cin >> quantity;
 	}
 
@@ -202,81 +202,66 @@ public:
 	{
 		Item item;
 		ofstream ItemFile;
-		ItemFile.open("Items.txt", ios::app);
+		ItemFile.open("db/Items.txt", ios::app);
 		item.addItem();
-		ItemFile.write((char *)&item, sizeof(item));
+		ItemFile << item;
 		ItemFile.close();
 	}
-
-	int SearchItem(string nam)
+	bool SearchItem(string &nam)
 	{
-		ifstream fin;
-		fin.open("db/Items.txt", ios::in);
+		ifstream fileItem;
+		fileItem.open("db/Items.txt", ios::in);
 
 		Item item;
 
-		fin.read((char *)&item, sizeof(item));
-
-		while (!fin.eof())
+		while (fileItem >> item)
 		{
-			cout << item.name;
-			if (nam == item.name)
+			if (item.name == nam)
 			{
-				cout << "\nfound";
-				return 1;
+				fileItem.close();
+				return 0;
 			}
-			fin.read((char *)&item, sizeof(item));
 		}
-		cout << "\n not found";
-		fin.close();
-		return 0;
+
+		fileItem.close();
+		return 1;
 	}
-	void ModifyItem()
+	void modifyItem(Item &i)
 	{
-		string nam;
-		int flag;
-		cout << "Enter the name Of the item which you want to modify";
-		cin >> nam;
-		flag = SearchItem(nam);
-		if (flag == 0)
+		bool flag = SearchItem(i.name);
+		if (!flag)
 		{
-			cout << "Item Not Found!! Enter Vaild Name";
+			deleteItem(i);
+			AddItems();
 		}
 		else
 		{
-			fstream fout;
-			ifstream fin;
-			Item item;
-			fin.open("db/Items.txt");
-			fout.open("db/text.txt", ios::trunc | ios::out | ios::in);
-			fin.seekg(0, ios::beg);
-			fin.read((char *)&item, sizeof(item));
-			while (fin)
-			{
-				if (nam != item.name)
-				{
-					fout.write((char *)&item, sizeof(item));
-				}
-				else
-				{
-					item.addItem();
-					fout.write((char *)&item, sizeof(item));
-				}
-			}
-			fout.close();
-			fin.close();
-			ifstream fpt;
-			fstream fpo;
-			fpo.open("db/Items.txt", ios::trunc | ios::out | ios::in);
-			fpt.open("db/text.txt");
-			while (!fpt.eof())
-			{
-				fpo.write((char *)&item, sizeof(item));
-			}
-			fpo.close();
-			fpt.close();
-			remove("db/text.txt");
+			cout << "item not found";
 		}
+	};
+
+	void deleteItem(Item &i)
+	{
+		ifstream old_file;
+		ofstream new_file;
+		Item item;
+
+		old_file.open("db/Items.txt");
+		new_file.open("db/Temp.txt");
+
+		while (old_file >> item)
+		{
+			if (item.name != i.name)
+			{
+				new_file << item;
+			}
+		}
+
+		old_file.close();
+		new_file.close();
+
+		remove("db/Items.txt");
+		rename("db/Temp.txt", "db/Items.txt");
 	}
 };
 
@@ -401,6 +386,8 @@ public:
 
 int main()
 {
+	// Item *item = NULL;
+	Items i_obj;
 	// Initializing [Customer] pointer to null
 	Customer *customer = NULL;
 
@@ -513,6 +500,26 @@ int main()
 				 << "\n\t0. Exit"
 				 << "\n\n\tEnter your choice : ";
 			cin >> choice;
+			switch (choice)
+			{
+			case 1:
+				i_obj.AddItems();
+				break;
+			case 2:
+				cout << "Enter the item name to be deleted ";
+				cin >> i_obj.name;
+				i_obj.deleteItem(i_obj);
+				break;
+			case 3:
+
+				cout << "Enter the name of item to be modify: ";
+				cin >> i_obj.name;
+				i_obj.modifyItem(i_obj);
+				break;
+
+			default:
+				break;
+			}
 
 			/** TODO: Add required functions **/
 		}
