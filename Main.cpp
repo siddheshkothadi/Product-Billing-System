@@ -42,11 +42,11 @@ public:
 
 	void takeInput()
 	{
-		cout << "\n\tEnter Name of Item: ";
+		cout << "\n\t\tEnter Name of Item: ";
 		cin >> name;
-		cout << "\n\tEnter Price of Item: ";
+		cout << "\n\t\tEnter Price of Item: ";
 		cin >> price;
-		cout << "\n\tEnter Quantity of Item: ";
+		cout << "\n\t\tEnter Quantity of Item: ";
 		cin >> quantity;
 	}
 
@@ -251,8 +251,8 @@ public:
 			if (searchItem(itemName))
 			{
 				// Item already exists
-				cout << "\n\tItem already exists!"
-					 << "\n\tPlease add a unique item!\n";
+				cout << "\n\t\tItem already exists!"
+					 << "\n\t\tPlease add a unique item!\n";
 			}
 			else
 			{
@@ -275,7 +275,7 @@ public:
 		}
 		else
 		{
-			cout << "\n\tItem not found";
+			cout << "\n\t\tItem not found";
 		}
 	}
 
@@ -459,13 +459,13 @@ int main()
 		if (state == UserState::LOGGED_OUT)
 		{
 			// Welcome Screen
-			cout << "\t\t================================================"
+			cout << "\n\n\t\t================================================"
 				 << "\n\t\t********\tWELCOME TO SHOPKART\t********"
 				 << "\n\t\t================================================\n\n";
 			// Show Login Screen
-			cout << "\n\t1. Sign Up [Customer]"
-				 << "\n\t2. Login [Customer]"
-				 << "\n\t3. Login [Shop]"
+			cout << "\n\t1. Sign Up\t[Customer]"
+				 << "\n\t2. Login\t[Customer]"
+				 << "\n\t3. Login\t[Shop]"
 				 << "\n\t0. Exit"
 				 << "\n\n\tEnter your choice : ";
 			cin >> choice;
@@ -570,18 +570,21 @@ int main()
 
 			case 1:
 				i_obj.addItem();
+				cout << "\n\t\tItem added successfully!\n";
 				break;
 
 			case 2:
-				cout << "\n\tEnter the item name to be deleted ";
+				cout << "\n\t\tEnter the item name to be deleted: ";
 				cin >> key;
 				i_obj.deleteItem(key);
+				cout << "\n\t\tItem deleted successfully!\n";
 				break;
 
 			case 3:
-				cout << "\n\tEnter the name of item to be modify: ";
+				cout << "\n\t\tEnter the name of item to be modified: ";
 				cin >> key;
 				i_obj.modifyItem(key);
+				cout << "\n\t\tItem modified successfully!\n";
 				break;
 
 			case 4:
@@ -590,7 +593,7 @@ int main()
 				break;
 
 			default:
-				cout << "\n\tPlease enter a valid choice!\n";
+				cout << "\n\t\tPlease enter a valid choice!\n";
 				break;
 			}
 		}
