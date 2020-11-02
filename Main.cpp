@@ -50,7 +50,8 @@ public:
 		cin >> quantity;
 	}
 
-	string getName(){
+	string getName()
+	{
 		return name;
 	}
 
@@ -117,7 +118,8 @@ public:
 		cin >> contactNumber;
 	}
 
-	string getUsername(){
+	string getUsername()
+	{
 		return username;
 	}
 
@@ -426,7 +428,7 @@ public:
 };
 
 int main()
-{	
+{
 	// Object of class [Items]
 	Items i_obj;
 
@@ -456,6 +458,10 @@ int main()
 	{
 		if (state == UserState::LOGGED_OUT)
 		{
+			// Welcome Screen
+			cout << "\t\t================================================"
+				 << "\n\t\t********\tWELCOME TO SHOPKART\t********"
+				 << "\n\t\t================================================\n\n";
 			// Show Login Screen
 			cout << "\n\t1. Sign Up [Customer]"
 				 << "\n\t2. Login [Customer]"
@@ -488,7 +494,8 @@ int main()
 					cout << "\n\tIncorrect username or password! Please try again\n";
 					customer = NULL;
 				}
-				else{
+				else
+				{
 					cout << "\n\tWelcome \'" << username << "\', you're now logged in\n";
 				}
 
@@ -510,7 +517,7 @@ int main()
 				if (shop->areValidCredentials(shopID, password))
 				{
 					state = UserState::SHOP;
-					cout << "\n\tWelcome " << shopID << ", you're now logged in\n";
+					cout << "\n\tWelcome \'" << shopID << "\', you're now logged in\n";
 				}
 				else
 				{
@@ -534,15 +541,16 @@ int main()
 				 << "\n\n\t\tEnter your choice : ";
 			cin >> choice;
 
-			switch(choice){
-				case 4:
-					state = UserState::LOGGED_OUT;
-					cout << "\n\tSuccessfully Logged Out!\n";
-					break;
+			switch (choice)
+			{
+			case 4:
+				state = UserState::LOGGED_OUT;
+				cout << "\n\tSuccessfully Logged Out!\n";
+				break;
 
-				default:
-					cout << "\n\tPlease enter a valid choice!\n";
-					break;
+			default:
+				cout << "\n\tPlease enter a valid choice!\n";
+				break;
 			}
 
 			/** TODO: Add the required functions for the items **/
@@ -585,7 +593,6 @@ int main()
 				cout << "\n\tPlease enter a valid choice!\n";
 				break;
 			}
-
 		}
 	}
 
