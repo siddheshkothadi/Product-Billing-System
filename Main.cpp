@@ -40,15 +40,7 @@ public:
 		quantity = q;
 	}
 
-	void takeInput()
-	{
-		cout << "\n\t\tEnter Name of Item: ";
-		cin >> name;
-		cout << "\n\t\tEnter Price of Item: ";
-		cin >> price;
-		cout << "\n\t\tEnter Quantity of Item: ";
-		cin >> quantity;
-	}
+	void takeInput();
 
 	string getName()
 	{
@@ -57,7 +49,7 @@ public:
 
 	void showItem()
 	{
-		cout << name << "\t" << price << "\t" << quantity << endl;
+		cout << "\t" << name << "\t" << price << "\t" << quantity << endl;
 	}
 
 	friend ostream &operator<<(ostream &out, Item &item)
@@ -77,6 +69,15 @@ public:
 	}
 };
 
+void Item::takeInput()
+{
+	cout << "\n\t\tEnter Name of Item: ";
+	cin >> name;
+	cout << "\n\t\tEnter Price of Item: ";
+	cin >> price;
+	cout << "\n\t\tEnter Quantity of Item: ";
+	cin >> quantity;
+}
 class Customer
 {
 private:
@@ -106,18 +107,7 @@ public:
 		//orderHistory = vector<vector<Item>>();
 	}
 
-	void takeInput()
-	{
-		cout << "\n\tEnter Username: ";
-		cin >> username;
-		cout << "\n\tEnter password: ";
-		cin >> password;
-		cout << "\n\tEnter address: ";
-		cin >> address;
-		cout << "\n\tEnter your contact number: ";
-		cin >> contactNumber;
-	}
-
+	void takeInput();
 	string getUsername()
 	{
 		return username;
@@ -133,10 +123,10 @@ public:
 	{
 		if (currentCart.empty())
 		{
-			cout << "\n\tThe cart is empty :(";
+			cout << "\n\tThe cart is empty :)";
 			return;
 		}
-		cout << "Name"
+		cout << "\tName"
 			 << "\tPrice\t"
 			 << "Quantity\t" << endl;
 		for (Item i : currentCart)
@@ -177,6 +167,17 @@ public:
 	}
 };
 
+void Customer ::takeInput()
+{
+	cout << "\n\tEnter Username: ";
+	cin >> username;
+	cout << "\n\tEnter password: ";
+	cin >> password;
+	cout << "\n\tEnter address: ";
+	cin >> address;
+	cout << "\n\tEnter your contact number: ";
+	cin >> contactNumber;
+}
 class ShopAccount
 {
 private:
@@ -302,6 +303,22 @@ public:
 		remove("db/Items.txt");
 		rename("db/Temp.txt", "db/Items.txt");
 	}
+
+	void displayItem()
+	{
+		ifstream fileItem;
+		fileItem.open("db/Items.txt", ios::in);
+
+		Item item;
+		cout << "\tName"
+			 << "\tPrice\t"
+			 << "Quantity\t" << endl;
+		while (fileItem >> item)
+		{
+			item.showItem();
+		}
+		fileItem.close();
+	}
 };
 
 // Customer database file operations
@@ -406,6 +423,11 @@ public:
 
 		remove("db/Customers.txt");
 		rename("db/Temp.txt", "db/Customers.txt");
+	}
+	void displayProfile(Customer *customer)
+	{
+
+		customer->show();
 	}
 
 	// /** For debugging purpose only
@@ -543,6 +565,13 @@ int main()
 
 			switch (choice)
 			{
+			case 1:
+				i_obj.displayItem();
+				break;
+			case 3:
+				c_obj.displayProfile(customer);
+				break;
+
 			case 4:
 				state = UserState::LOGGED_OUT;
 				cout << "\n\tSuccessfully Logged Out!\n";
