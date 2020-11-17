@@ -1013,6 +1013,9 @@ int main()
 				}
 				break;
 
+			case 0:
+				break;
+
 			default:
 				cout << "\n\tPlease enter a valid choice!\n";
 				break;
