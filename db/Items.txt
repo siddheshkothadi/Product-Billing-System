@@ -4,3 +4,9 @@ book
 pen
 10
 44
+pencil
+10
+25
+colour
+30
+50
