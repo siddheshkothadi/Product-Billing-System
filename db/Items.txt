@@ -1,0 +1,15 @@
+book
+22
+80
+pen
+10
+65
+scale
+10
+95
+ruler
+55
+90
+colour
+40
+50

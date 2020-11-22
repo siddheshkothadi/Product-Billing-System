@@ -46,16 +46,7 @@ public:
 	}
 
 	// To take the input from the user
-	void takeInput()
-	{
-		cout << "\n\t\tEnter Name of Item: ";
-		cin >> name;
-		cout << "\n\t\tEnter Price of Item: ";
-		cin >> price;
-		cout << "\n\t\tEnter Quantity of Item: ";
-		cin >> quantity;
-	}
-
+	void takeInput();
 	/** Getters for Data Members **/
 	string getName()
 	{
@@ -71,10 +62,7 @@ public:
 	}
 
 	// To display the item information
-	void showItem()
-	{
-		cout << "\t\t\t\t" << name << "\t" << price << "\t" << quantity << endl;
-	}
+	void showItem();
 
 	/** To reduce the quantity of item by the provided amount
 	 * @return true if quantity can be reduced
@@ -129,6 +117,22 @@ public:
 	}
 };
 
+// To take the input from the user
+void Item ::takeInput()
+{
+	cout << "\n\t\tEnter Name of Item: ";
+	cin >> name;
+	cout << "\n\t\tEnter Price of Item: ";
+	cin >> price;
+	cout << "\n\t\tEnter Quantity of Item: ";
+	cin >> quantity;
+}
+// To display the item information
+void Item::showItem()
+{
+	cout << "\t\t\t\t" << name << "\t" << price << "\t" << quantity << endl;
+}
+
 /**
  * [OrderHistory] represents the summary of the placed order
  */
@@ -145,7 +149,9 @@ private:
 
 public:
 	// Default Constructor
+
 	OrderHistory()
+
 	{
 		numberOfItems = 0;
 		totalBillAmount = 0;
@@ -167,14 +173,8 @@ public:
 		month = localTime->tm_mon + 1;
 		year = localTime->tm_year + 1900;
 	}
-
 	// Displays the order history
-	void showOrderHistory()
-	{
-		cout << "\n\t\tDate : " << day << "/" << month << "/" << year;
-		cout << "\n\t\t\tItems Ordered = " << numberOfItems;
-		cout << "\n\t\t\tTotal Bill Amount = Rs. " << totalBillAmount;
-	}
+	void showOrderHistory();
 
 	/**Overloaded insertion(<<) operator
 	 * Writes order summary to the file
@@ -202,6 +202,14 @@ public:
 		return in;
 	}
 };
+
+// Displays the order history
+void OrderHistory ::showOrderHistory()
+{
+	cout << "\n\t\tDate : " << day << "/" << month << "/" << year;
+	cout << "\n\t\t\tItems Ordered = " << numberOfItems;
+	cout << "\n\t\t\tTotal Bill Amount = Rs. " << totalBillAmount;
+}
 
 // Class representing a Customer
 class Customer
@@ -238,19 +246,8 @@ public:
 		ORDER_HISTORY_SIZE = 0;
 		orderHistory = vector<OrderHistory>();
 	}
-
 	// To take input while signing up the user
-	void takeInput()
-	{
-		cout << "\n\tEnter Username: ";
-		cin >> username;
-		cout << "\n\tEnter password: ";
-		cin >> password;
-		cout << "\n\tEnter address: ";
-		cin >> address;
-		cout << "\n\tEnter your contact number: ";
-		cin >> contactNumber;
-	}
+	void takeInput();
 
 	// Getter for username
 	string getUsername()
@@ -265,10 +262,7 @@ public:
 	}
 
 	// To show the customer profile
-	void displayProfile()
-	{
-		cout << "\n\tUsername : " << username << "\n\tAddress : " << address << "\n\tContact Number : " << contactNumber << "\n";
-	}
+	void displayProfile();
 
 	// To calculate the total bill amount and the total number of items in the cart
 	vector<int> calculateBill()
@@ -289,25 +283,7 @@ public:
 	/** ===CART OPERATIONS=== **/
 
 	// To show the items inside the cart
-	void showCart()
-	{
-		if (currentCart.empty())
-		{
-			cout << "\n\t\tThe cart is empty :)\n";
-			return;
-		}
-		cout << "\n\t\t\t\t======== CART ========"
-			 << "\n\n\t\t\t\tName"
-			 << "\tPrice\t"
-			 << "Quantity\t" << endl;
-		for (Item i : currentCart)
-		{
-			i.showItem();
-		}
-		vector<int> bill = calculateBill();
-		cout << "\n\n\t\t\tTotal Items : " << bill[0];
-		cout << "\n\t\t\tTotal Bill Amount : Rs. " << bill[1] << endl;
-	}
+	void showCart();
 
 	// To clear the cart
 	void emptyCart()
@@ -317,18 +293,7 @@ public:
 	}
 
 	// To display the previous order history of the customer
-	void viewPreviousOrderHistory()
-	{
-		if (orderHistory.empty())
-		{
-			cout << "\n\t\tNo previous order history found :)\n";
-		}
-		for (OrderHistory &order : orderHistory)
-		{
-			order.showOrderHistory();
-			cout << "\n";
-		}
-	}
+	void viewPreviousOrderHistory();
 
 	/**Overloaded insertion(<<) operator
 	 * Writes customer information to the file
@@ -380,6 +345,56 @@ public:
 		return in;
 	}
 };
+// To take input while signing up the user
+void Customer ::takeInput()
+{
+	cout << "\n\tEnter Username: ";
+	cin >> username;
+	cout << "\n\tEnter password: ";
+	cin >> password;
+	cout << "\n\tEnter address: ";
+	cin >> address;
+	cout << "\n\tEnter your contact number: ";
+	cin >> contactNumber;
+}
+// To show the customer profile
+void Customer::displayProfile()
+{
+	cout << "\n\tUsername : " << username << "\n\tAddress : " << address << "\n\tContact Number : " << contactNumber << "\n";
+}
+// To show the items inside the cart
+void Customer::showCart()
+{
+	if (currentCart.empty())
+	{
+		cout << "\n\t\tThe cart is empty :)\n";
+		return;
+	}
+	cout << "\n\t\t\t\t======== CART ========"
+		 << "\n\n\t\t\t\tName"
+		 << "\tPrice\t"
+		 << "Quantity\t" << endl;
+	for (Item i : currentCart)
+	{
+		i.showItem();
+	}
+	vector<int> bill = calculateBill();
+	cout << "\n\n\t\t\tTotal Items : " << bill[0];
+	cout << "\n\t\t\tTotal Bill Amount : Rs. " << bill[1] << endl;
+}
+// To display the previous order history of the customer
+void Customer::viewPreviousOrderHistory()
+{
+	if (orderHistory.empty())
+	{
+		cout << "\n\t\tNo previous order history found :)\n";
+	}
+	for (OrderHistory &order : orderHistory)
+	{
+		order.showOrderHistory();
+		cout << "\n";
+	}
+}
 
 // Class representing the account of the shop
 // [ShopAccount] can modify the item database
@@ -421,7 +436,6 @@ public:
 class Items
 {
 public:
-
 	/** In the database, search for the item with the provided name
 	 * If found, @return the [Item]
 	 * else @return NULL
@@ -449,174 +463,190 @@ public:
 	}
 
 	// To add the item to the Items database
-	void addItem()
-	{
-		Item item;
-		string itemName;
-		ofstream itemFile;
-		bool itemAlreadyExists = 1;
-
-		itemFile.open("db/Items.txt", ios::app);
-
-		while (itemAlreadyExists)
-		{
-			item.takeInput();
-			itemName = item.getName();
-			if (searchItem(itemName) != NULL)
-			{
-				// Item already exists
-				cout << "\n\t\tItem already exists!"
-					 << "\n\t\tPlease add a unique item!\n";
-			}
-			else
-			{
-				// If the item name is unique, end the loop
-				itemAlreadyExists = 0;
-			}
-		}
-
-		itemFile << item;
-		itemFile.close();
-	}
+	void addItem();
 
 	// To modify an item from the Items database
-	void modifyItem(string key)
-	{
-		//bool found = searchItem(key);
-		bool found;
-		if (searchItem(key) != NULL)
-		{
-			found = 1;
-		}
-		else
-		{
-			found = 0;
-		}
-		if (found)
-		{
-			deleteItem(key);
-			addItem();
-		}
-		else
-		{
-			cout << "\n\t\tItem not found";
-		}
-	}
+	void modifyItem(string key);
 
 	// To delete an item from the Items database
-	void deleteItem(string key)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Item item;
-
-		old_file.open("db/Items.txt");
-		new_file.open("db/Temp.txt");
-
-		while (old_file >> item)
-		{
-			if (item.getName() != key)
-			{
-				new_file << item;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Items.txt");
-		rename("db/Temp.txt", "db/Items.txt");
-	}
+	void deleteItem(string key);
 
 	// To display a list of available items
-	void displayItem()
-	{
-		ifstream fileItem;
-		fileItem.open("db/Items.txt", ios::in);
-
-		Item item;
-		cout << "\n\t\t\t\tName"
-			 << "\tPrice\t"
-			 << "Quantity\t\n" << endl;
-		while (fileItem >> item)
-		{
-			item.showItem();
-		}
-		fileItem.close();
-	}
+	void displayItem();
 
 	/** To reduce quantity of the provided [Item] by @param quantity
 	 * If the quantity can be reduced, reduce the quantity and @return true
 	 * else @return false
 	 */
-	bool reduceQuantity(Item *itemToReduce, int quantity)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Item item;
-		bool reduced = false;
-
-		old_file.open("db/Items.txt");
-		new_file.open("db/Temp.txt");
-
-		while (old_file >> item)
-		{
-			if (item.getName() != itemToReduce->getName())
-			{
-				new_file << item;
-			}
-			else
-			{
-				reduced = item.reduceQuantity(quantity);
-				new_file << item;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Items.txt");
-		rename("db/Temp.txt", "db/Items.txt");
-
-		return reduced;
-	}
+	bool reduceQuantity(Item *itemToReduce, int quantity);
 
 	/** To increase quantity of the provided [Item] by @param quantity
 	 * If the quantity can be increased, increase the quantity and @return true
 	 * else @return false
 	 */
-	bool increaseQuantity(Item *itemToIncrease, int quantity)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Item item;
-		bool increased = false;
-
-		old_file.open("db/Items.txt");
-		new_file.open("db/Temp.txt");
-
-		while (old_file >> item)
-		{
-			if (item.getName() != itemToIncrease->getName())
-			{
-				new_file << item;
-			}
-			else
-			{
-				increased = item.increaseQuantity(quantity);
-				new_file << item;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Items.txt");
-		rename("db/Temp.txt", "db/Items.txt");
-
-		return increased;
-	}
+	bool increaseQuantity(Item *itemToIncrease, int quantity);
 };
+// To add the item to the Items database
+void Items ::addItem()
+{
+	Item item;
+	string itemName;
+	ofstream itemFile;
+	bool itemAlreadyExists = 1;
+
+	itemFile.open("db/Items.txt", ios::app);
+
+	while (itemAlreadyExists)
+	{
+		item.takeInput();
+		itemName = item.getName();
+		if (searchItem(itemName) != NULL)
+		{
+			// Item already exists
+			cout << "\n\t\tItem already exists!"
+				 << "\n\t\tPlease add a unique item!\n";
+		}
+		else
+		{
+			// If the item name is unique, end the loop
+			itemAlreadyExists = 0;
+		}
+	}
+
+	itemFile << item;
+	itemFile.close();
+}
+
+// To modify an item from the Items database
+void Items ::modifyItem(string key)
+{
+	//bool found = searchItem(key);
+	bool found;
+	if (searchItem(key) != NULL)
+	{
+		found = 1;
+	}
+	else
+	{
+		found = 0;
+	}
+	if (found)
+	{
+		deleteItem(key);
+		addItem();
+	}
+	else
+	{
+		cout << "\n\t\tItem not found";
+	}
+}
+
+// To delete an item from the Items database
+void Items::deleteItem(string key)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Item item;
+
+	old_file.open("db/Items.txt");
+	new_file.open("db/Temp.txt");
+
+	while (old_file >> item)
+	{
+		if (item.getName() != key)
+		{
+			new_file << item;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Items.txt");
+	rename("db/Temp.txt", "db/Items.txt");
+}
+
+// To display a list of available items
+void Items::displayItem()
+{
+	ifstream fileItem;
+	fileItem.open("db/Items.txt", ios::in);
+
+	Item item;
+	cout << "\n\t\t\t\tName"
+		 << "\tPrice\t"
+		 << "Quantity\t\n"
+		 << endl;
+	while (fileItem >> item)
+	{
+		item.showItem();
+	}
+	fileItem.close();
+}
+
+bool Items::reduceQuantity(Item *itemToReduce, int quantity)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Item item;
+	bool reduced = false;
+
+	old_file.open("db/Items.txt");
+	new_file.open("db/Temp.txt");
+
+	while (old_file >> item)
+	{
+		if (item.getName() != itemToReduce->getName())
+		{
+			new_file << item;
+		}
+		else
+		{
+			reduced = item.reduceQuantity(quantity);
+			new_file << item;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Items.txt");
+	rename("db/Temp.txt", "db/Items.txt");
+
+	return reduced;
+}
+
+bool Items::increaseQuantity(Item *itemToIncrease, int quantity)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Item item;
+	bool increased = false;
+
+	old_file.open("db/Items.txt");
+	new_file.open("db/Temp.txt");
+
+	while (old_file >> item)
+	{
+		if (item.getName() != itemToIncrease->getName())
+		{
+			new_file << item;
+		}
+		else
+		{
+			increased = item.increaseQuantity(quantity);
+			new_file << item;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Items.txt");
+	rename("db/Temp.txt", "db/Items.txt");
+
+	return increased;
+}
 
 // A class that handles all the database operations related to Customers database
 class Customers
@@ -629,27 +659,10 @@ public:
 	 *  @return true if the username is not taken by anyone
 	 *  @return false if the username is already taken
 	**/
-	bool isValidUsername(string &username)
-	{
-		ifstream file;
-		Customer customer;
-
-		file.open("db/Customers.txt", ios::in);
-
-		while (file >> customer)
-		{
-			if (customer.getUsername() == username)
-			{
-				file.close();
-				return 0;
-			}
-		}
-
-		file.close();
-		return 1;
-	}
+	bool isValidUsername(string &username);
 
 	// Search and return the customer if found in the database else return NULL
+
 	Customer *searchCustomer(string &username, string &password, UserState &state)
 	{
 		ifstream file;
@@ -672,248 +685,277 @@ public:
 	}
 
 	// To add a new customer to the database
-	bool signUpCustomer()
-	{
-		ofstream file;
-		Customer customer;
-		bool validUsername = 0;
-
-		file.open("db/Customers.txt", ios::app);
-
-		while (!validUsername)
-		{
-			customer.takeInput();
-			key = customer.getUsername();
-			validUsername = isValidUsername(key);
-			if (!validUsername)
-			{
-				cout << "\n\tUsername already taken... Please enter another username!";
-			}
-		}
-
-		file << customer;
-
-		file.close();
-
-		return 1;
-	}
+	bool signUpCustomer();
 
 	// To delete an account of a customer
-	void deleteCustomer(Customer &c)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Customer customer;
-
-		old_file.open("db/Customers.txt");
-		new_file.open("db/Temp.txt");
-
-		while (old_file >> customer)
-		{
-			if (customer.getUsername() != c.getUsername())
-			{
-				new_file << customer;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Customers.txt");
-		rename("db/Temp.txt", "db/Customers.txt");
-	}
+	void deleteCustomer(Customer &c);
 
 	// To add an item to the customer's cart from the items database
-	void addItemToCart(Customer *currentCustomer)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Customer customer;
-		Items itemDB;
-		Item *itemToAdd;
-		bool reduced = false;
-
-		string nameOfItem;
-		int quantityOfItem;
-
-		cout << "Enter the name of the item to add : ";
-		cin >> nameOfItem;
-		cout << "Enter the quantiy of the item to add : ";
-		cin >> quantityOfItem;
-
-		// Find the item in the item's database
-		itemToAdd = itemDB.searchItem(nameOfItem);
-		// Reduce that item's quantity from the item DB
-		if (itemToAdd != NULL || itemToAdd->getQuantity() != 0)
-		{
-			reduced = itemDB.reduceQuantity(itemToAdd, quantityOfItem);
-		}
-
-		// If there's an exception while removing the item from the DB, do not add item to cart
-		if (!reduced)
-		{
-			cout << "\n\t\tCan't add the requested item to cart!\n";
-			return;
-		}
-
-		// If the item already exists in the cart, Increase the quantity in the cart
-		bool found = false;
-		for (Item &i : currentCustomer->currentCart)
-		{
-			if (i.getName() == nameOfItem)
-			{
-				found = true;
-				i.increaseQuantity(quantityOfItem);
-				break;
-			}
-		}
-
-		// If not found, Use the parameterized constructor to create an object of class Item
-		if (!found)
-		{
-			Item it = Item(nameOfItem, itemToAdd->getPrice(), quantityOfItem);
-			currentCustomer->currentCart.push_back(it);
-			currentCustomer->CART_SIZE++;
-		}
-
-		old_file.open("db/Customers.txt");
-		new_file.open("db/Temp.txt");
-
-		while (old_file >> customer)
-		{
-			if (customer.getUsername() != currentCustomer->getUsername())
-			{
-				new_file << customer;
-			}
-			else
-			{
-				// This pointer refers to the current [updated] instance of the class
-				new_file << *currentCustomer;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Customers.txt");
-		rename("db/Temp.txt", "db/Customers.txt");
-		cout << "\n\t\t\tAdded the item to the cart!\n";
-	}
-
+	void addItemToCart(Customer *currentCustomer);
 	// To remove an item from the customer's cart and add it to the items database
-	void removeItemFromCart(Customer *currentCustomer)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Customer customer;
-		Items itemDB;
-		Item *itemToRemove;
-		bool increased = false;
-
-		string nameOfItem;
-		int quantityOfItem = 0;
-
-		cout << "Enter the name of the item to remove : ";
-		cin >> nameOfItem;
-
-		// Erase all items with than name from the cart
-		for (auto ptr = currentCustomer->currentCart.begin(); ptr != currentCustomer->currentCart.end(); ++ptr)
-		{
-			if (ptr->getName() == nameOfItem)
-			{
-				quantityOfItem += ptr->getQuantity();
-				currentCustomer->currentCart.erase(ptr--);
-				currentCustomer->CART_SIZE--;
-			}
-		}
-
-		// Find the item in the item's database
-		itemToRemove = itemDB.searchItem(nameOfItem);
-		// Increase its quantity
-		if (itemToRemove != NULL)
-		{
-			increased = itemDB.increaseQuantity(itemToRemove, quantityOfItem);
-		}
-
-		// If there's an exception while removing the item from the DB, do not add item to cart
-		if (!increased)
-			return;
-
-		// Update the database
-		old_file.open("db/Customers.txt");
-		new_file.open("db/Temp.txt");
-
-		while (old_file >> customer)
-		{
-			if (customer.getUsername() != currentCustomer->getUsername())
-			{
-				new_file << customer;
-			}
-			else
-			{
-				new_file << *currentCustomer;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Customers.txt");
-		rename("db/Temp.txt", "db/Customers.txt");
-	}
+	void removeItemFromCart(Customer *currentCustomer);
 
 	/** Called when a customer places the order :
 	 * 	1. Generate the bill
 	 * 	2. Clear the cart
 	 * 	3. Take the order summary and place the order
 	 */
-	void placeOrder(Customer *currentCustomer)
-	{
-		ifstream old_file;
-		ofstream new_file;
-		Customer customer;
-
-		// Generate the bill
-		vector<int> bill = currentCustomer->calculateBill();
-		if (bill[0] == 0)
-		{
-			cout << "\n\t\t\tYour cart is empty... can't place the order!\n";
-			return;
-		}
-
-		// Clear the cart
-		currentCustomer->emptyCart();
-
-		// Take the order summary and place the order
-		OrderHistory order(bill[0], bill[1]);
-		currentCustomer->orderHistory.push_back(order);
-		currentCustomer->ORDER_HISTORY_SIZE++;
-
-		old_file.open("db/Customers.txt");
-		new_file.open("db/Temp.txt");
-
-		// Update the database
-		while (old_file >> customer)
-		{
-			if (customer.getUsername() != currentCustomer->getUsername())
-			{
-				new_file << customer;
-			}
-			else
-			{
-				// This pointer refers to the current [updated] instance of the class
-				new_file << *currentCustomer;
-			}
-		}
-
-		old_file.close();
-		new_file.close();
-
-		remove("db/Customers.txt");
-		rename("db/Temp.txt", "db/Customers.txt");
-		cout << "\n\t\t\tOrder Placed!\n\t\t\tThank you for using Shopkart!";
-	}
+	void placeOrder(Customer *currentCustomer);
 };
+bool Customers::isValidUsername(string &username)
+{
+	ifstream file;
+	Customer customer;
+
+	file.open("db/Customers.txt", ios::in);
+
+	while (file >> customer)
+	{
+		if (customer.getUsername() == username)
+		{
+			file.close();
+			return 0;
+		}
+	}
+
+	file.close();
+	return 1;
+}
+// To add a new customer to the database
+bool Customers::signUpCustomer()
+{
+	ofstream file;
+	Customer customer;
+	bool validUsername = 0;
+
+	file.open("db/Customers.txt", ios::app);
+
+	while (!validUsername)
+	{
+		customer.takeInput();
+		key = customer.getUsername();
+		validUsername = isValidUsername(key);
+		if (!validUsername)
+		{
+			cout << "\n\tUsername already taken... Please enter another username!";
+		}
+	}
+
+	file << customer;
+
+	file.close();
+
+	return 1;
+}
+// To delete an account of a customer
+void Customers::deleteCustomer(Customer &c)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Customer customer;
+
+	old_file.open("db/Customers.txt");
+	new_file.open("db/Temp.txt");
+
+	while (old_file >> customer)
+	{
+		if (customer.getUsername() != c.getUsername())
+		{
+			new_file << customer;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Customers.txt");
+	rename("db/Temp.txt", "db/Customers.txt");
+}
+// To add an item to the customer's cart from the items database
+void Customers::addItemToCart(Customer *currentCustomer)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Customer customer;
+	Items itemDB;
+	Item *itemToAdd;
+	bool reduced = false;
+
+	string nameOfItem;
+	int quantityOfItem;
+
+	cout << "Enter the name of the item to add : ";
+	cin >> nameOfItem;
+	cout << "Enter the quantiy of the item to add : ";
+	cin >> quantityOfItem;
+
+	// Find the item in the item's database
+	itemToAdd = itemDB.searchItem(nameOfItem);
+	// Reduce that item's quantity from the item DB
+	if (itemToAdd != NULL || itemToAdd->getQuantity() != 0)
+	{
+		reduced = itemDB.reduceQuantity(itemToAdd, quantityOfItem);
+	}
+
+	// If there's an exception while removing the item from the DB, do not add item to cart
+	if (!reduced)
+	{
+		cout << "\n\t\tCan't add the requested item to cart!\n";
+		return;
+	}
+
+	// If the item already exists in the cart, Increase the quantity in the cart
+	bool found = false;
+	for (Item &i : currentCustomer->currentCart)
+	{
+		if (i.getName() == nameOfItem)
+		{
+			found = true;
+			i.increaseQuantity(quantityOfItem);
+			break;
+		}
+	}
+
+	// If not found, Use the parameterized constructor to create an object of class Item
+	if (!found)
+	{
+		Item it = Item(nameOfItem, itemToAdd->getPrice(), quantityOfItem);
+		currentCustomer->currentCart.push_back(it);
+		currentCustomer->CART_SIZE++;
+	}
+
+	old_file.open("db/Customers.txt");
+	new_file.open("db/Temp.txt");
+
+	while (old_file >> customer)
+	{
+		if (customer.getUsername() != currentCustomer->getUsername())
+		{
+			new_file << customer;
+		}
+		else
+		{
+			// This pointer refers to the current [updated] instance of the class
+			new_file << *currentCustomer;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Customers.txt");
+	rename("db/Temp.txt", "db/Customers.txt");
+	cout << "\n\t\t\tAdded the item to the cart!\n";
+}
+
+// To remove an item from the customer's cart and add it to the items database
+void Customers::removeItemFromCart(Customer *currentCustomer)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Customer customer;
+	Items itemDB;
+	Item *itemToRemove;
+	bool increased = false;
+
+	string nameOfItem;
+	int quantityOfItem = 0;
+
+	cout << "Enter the name of the item to remove : ";
+	cin >> nameOfItem;
+
+	// Erase all items with than name from the cart
+	for (auto ptr = currentCustomer->currentCart.begin(); ptr != currentCustomer->currentCart.end(); ++ptr)
+	{
+		if (ptr->getName() == nameOfItem)
+		{
+			quantityOfItem += ptr->getQuantity();
+			currentCustomer->currentCart.erase(ptr--);
+			currentCustomer->CART_SIZE--;
+		}
+	}
+
+	// Find the item in the item's database
+	itemToRemove = itemDB.searchItem(nameOfItem);
+	// Increase its quantity
+	if (itemToRemove != NULL)
+	{
+		increased = itemDB.increaseQuantity(itemToRemove, quantityOfItem);
+	}
+
+	// If there's an exception while removing the item from the DB, do not add item to cart
+	if (!increased)
+		return;
+
+	// Update the database
+	old_file.open("db/Customers.txt");
+	new_file.open("db/Temp.txt");
+
+	while (old_file >> customer)
+	{
+		if (customer.getUsername() != currentCustomer->getUsername())
+		{
+			new_file << customer;
+		}
+		else
+		{
+			new_file << *currentCustomer;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Customers.txt");
+	rename("db/Temp.txt", "db/Customers.txt");
+}
+
+void Customers::placeOrder(Customer *currentCustomer)
+{
+	ifstream old_file;
+	ofstream new_file;
+	Customer customer;
+
+	// Generate the bill
+	vector<int> bill = currentCustomer->calculateBill();
+	if (bill[0] == 0)
+	{
+		cout << "\n\t\t\tYour cart is empty... can't place the order!\n";
+		return;
+	}
+
+	// Clear the cart
+	currentCustomer->emptyCart();
+
+	// Take the order summary and place the order
+	OrderHistory order(bill[0], bill[1]);
+	currentCustomer->orderHistory.push_back(order);
+	currentCustomer->ORDER_HISTORY_SIZE++;
+
+	old_file.open("db/Customers.txt");
+	new_file.open("db/Temp.txt");
+
+	// Update the database
+	while (old_file >> customer)
+	{
+		if (customer.getUsername() != currentCustomer->getUsername())
+		{
+			new_file << customer;
+		}
+		else
+		{
+			// This pointer refers to the current [updated] instance of the class
+			new_file << *currentCustomer;
+		}
+	}
+
+	old_file.close();
+	new_file.close();
+
+	remove("db/Customers.txt");
+	rename("db/Temp.txt", "db/Customers.txt");
+	cout << "\n\t\t\tOrder Placed!\n\t\t\tThank you for using Shopkart!";
+}
 
 int main()
 {
